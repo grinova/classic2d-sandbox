@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json -d",
     "sandbox": "webpack",
-    "sandbox:watch": "webpack --watch"
+    "sandbox:watch": "webpack --watch",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,8 @@
     "typescript": "^2.8.3",
     "webpack": "^4.8.3",
     "webpack-cli": "^2.1.3"
+  },
+  "dependencies": {
+    "classic2d": "github:grinova/classic2d"
   }
 }
