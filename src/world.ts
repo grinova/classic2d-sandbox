@@ -3,7 +3,6 @@ import { DebugDraw } from './debug-draw';
 import { Test } from './test';
 
 export class SandboxWorld extends World {
-  private listener: void | ContactListener;
   private test: Test;
 
   constructor(debugDraw: DebugDraw) {

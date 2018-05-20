@@ -5,7 +5,6 @@ import {
   Mat4,
   Vec2
 } from 'classic2d';
-import { Exception } from './common/common';
 
 const WHITE = '#FFFFFF';
 
@@ -250,7 +249,6 @@ class RenderPoint {
   private colors = new Float32Array(RenderPoint.MAX_COLORS);
   private count = 0;
   private indices = new Uint16Array(RenderPoint.MAX_INDICES);
-  private matrices = new Array<Mat4>(RenderPoint.MAX_VERTICES);
 
   private vertexBuffer: WebGLBuffer;
   private colorBuffer: WebGLBuffer;
@@ -377,11 +375,6 @@ class RenderText {
     this.texts = [];
     this.yOffset = 0;
   }
-}
-
-interface Model {
-  matrix: Mat4;
-  lines: RenderLine;
 }
 
 export interface Options {

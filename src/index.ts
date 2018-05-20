@@ -1,9 +1,8 @@
 import { appendDomElement, setCanvasSize } from './common/dom';
 import { Camera, DebugDraw } from './debug-draw';
-import { MovingAverage } from './moving-average';
 import { Test } from './test';
 import { SandboxWorld } from './world';
-import { ContactListener, World } from 'classic2d';
+import { World } from 'classic2d';
 
 export function createSandbox<T>(options: SandboxOptionsBase<T>, parent: HTMLElement = document.body) {
   const { element: canvasWebgl, remove: removeCanvasWebgl } = appendDomElement('canvas', parent);
