@@ -2,7 +2,7 @@ import { appendDomElement, setCanvasSize } from './common/dom';
 import { Camera, DebugDraw } from './debug-draw';
 import { Test } from './test';
 import { SandboxWorld } from './world';
-import { World } from 'classic2d';
+import { TimeDelta, World } from 'classic2d';
 
 export function createSandbox<T>(options: SandboxOptionsBase<T>, parent: HTMLElement = document.body) {
   const { element: canvasWebgl, remove: removeCanvasWebgl } = appendDomElement('canvas', parent);
@@ -27,7 +27,7 @@ export interface Actions<T> {
   init?: void | ActionHandler<T>;
   reset?: void | ActionHandler<T>;
   keyDown?: void | ((event: KeyboardEvent) => void);
-  preStep?: void | (() => void);
+  preStep?: void | ((time: TimeDelta) => void);
   postStep?: void | (() => void);
 }
 
@@ -148,7 +148,7 @@ export class Sandbox<T> {
       return;
     }
     if (this.actions && this.actions.preStep) {
-      this.actions.preStep();
+      this.actions.preStep(now);
     }
     const time = now - this.past;
     this.past = now;
