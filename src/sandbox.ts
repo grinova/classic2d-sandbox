@@ -7,6 +7,7 @@ import {
   Vec2,
   World
 } from 'classic2d';
+import { DebugDraw } from './debug-draw';
 import { createSandbox } from './index';
 
 function createBody(
@@ -90,6 +91,13 @@ window.onload = () => {
   const width = window.innerWidth;
   const height = window.innerHeight;
   const { sandbox } = createSandbox({ actions, width, height });
+  sandbox.setDebugDraw(
+    new DebugDraw(
+      sandbox.getWebGLRenderingContext(),
+      sandbox.getCanvasRenderingContext2D(),
+      sandbox.getCamera()
+    )
+  )
   const resize = (): void => {
     sandbox.resize(window.innerWidth, window.innerHeight);
   };

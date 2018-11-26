@@ -1,10 +1,10 @@
 import {
   Color,
   COLOR_COMPONENTS,
-  Draw,
   Mat4,
   Vec2
-} from 'classic2d';
+} from 'classic2d'
+import { Draw } from './graphics/draw'
 
 const WHITE = '#FFFFFF';
 

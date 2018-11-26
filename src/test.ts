@@ -4,12 +4,12 @@ import {
   ContactListener,
   World
 } from 'classic2d';
-import { DebugDraw } from './debug-draw';
+import { Draw } from './graphics/draw';
 import { MovingAverage } from './moving-average';
 
 export class Test<T = any> implements ContactListener<T> {
   private world: World;
-  private debugDraw: DebugDraw;
+  private debugDraw: void | Draw;
   private contactListener?: void | ContactListener<T>;
 
   private contacts: Contact[];
@@ -17,11 +17,9 @@ export class Test<T = any> implements ContactListener<T> {
   private isPause: boolean = false;
   private shouldMakeStep: boolean = false;
 
-  constructor(world: World, debugDraw: DebugDraw, contactListener?: void | ContactListener<T>) {
+  constructor(world: World, contactListener?: void | ContactListener<T>) {
     this.world = world;
-    this.debugDraw = debugDraw;
     this.contactListener = contactListener;
-    this.world.setDebugDraw(this.debugDraw);
     this.clearContacts();
   }
 
@@ -49,7 +47,7 @@ export class Test<T = any> implements ContactListener<T> {
   draw(time: number): void {
     this.world.drawDebugData();
     this.drawHelp(time);
-    this.debugDraw.flush();
+    this.debugDraw && this.debugDraw.flush();
     this.drawContacts();
     this.clearContacts();
   }
@@ -66,6 +64,10 @@ export class Test<T = any> implements ContactListener<T> {
     this.contactListener = contactListener;
   }
 
+  setDebugDraw(draw: Draw): void {
+    this.debugDraw = draw;
+  }
+
   step(time: number): void {
     if (!this.isPause || this.shouldMakeStep) {
       this.world.step(time);
@@ -78,6 +80,9 @@ export class Test<T = any> implements ContactListener<T> {
   }
 
   private drawContacts(): void {
+    if (!this.debugDraw) {
+      return;
+    }
     for (const contact of this.contacts) {
       const point = contact.getPoint();
       this.debugDraw.drawPoint(point, COLORS.CONTACT);
@@ -85,6 +90,9 @@ export class Test<T = any> implements ContactListener<T> {
   }
 
   private drawHelp(time: number): void {
+    if (!this.debugDraw) {
+      return;
+    }
     const averageFrameTime = this.frameTimeMovingAverage.get(time);
     const help = '[R] - reset; [P] - pause; [O] - step';
     const fps = 'FPS: ' + Math.floor(1000 / averageFrameTime).toString();

@@ -1,8 +1,13 @@
+import { TimeDelta, World } from 'classic2d';
 import { appendDomElement, setCanvasSize } from './common/dom';
-import { Camera, DebugDraw } from './debug-draw';
+import { Camera } from './debug-draw';
+import { DebugDraw as _DebugDraw } from './debug-draw';
+import { Draw } from './graphics/draw';
 import { Test } from './test';
 import { SandboxWorld } from './world';
-import { TimeDelta, World } from 'classic2d';
+
+export type DebugDraw = _DebugDraw
+export const DebugDraw = _DebugDraw
 
 export function createSandbox<T>(options: SandboxOptionsBase<T>, parent: HTMLElement = document.body) {
   const { element: canvasWebgl, remove: removeCanvasWebgl } = appendDomElement('canvas', parent);
@@ -48,9 +53,9 @@ export class Sandbox<T> {
   private canvasWebgl: HTMLCanvasElement;
   private canvas2d: HTMLCanvasElement;
   private gl: WebGLRenderingContext;
+  private gl2d: CanvasRenderingContext2D;
   private camera: Camera;
   private world: World;
-  private debugDraw: DebugDraw;
   private test: Test;
 
   private past = 0;
@@ -68,14 +73,29 @@ export class Sandbox<T> {
     this.camera = new Camera(0, 0, 0, width, height);
 
     this.gl = this.canvasWebgl.getContext('webgl') || this.canvasWebgl.getContext('experimental-webgl');
-    const gl2d = this.canvas2d.getContext('2d');
+    this.gl2d = this.canvas2d.getContext('2d');
 
-    this.debugDraw = new DebugDraw(this.gl, gl2d, this.camera);
-    const world = this.world = new SandboxWorld(this.debugDraw);
+    const world = this.world = new SandboxWorld();
     this.test = world.getTest();
     if (this.actions && this.actions.init) {
       this.actions.init(this.world, this);
     }
+  }
+
+  getWebGLRenderingContext(): WebGLRenderingContext {
+    return this.gl;
+  }
+
+  getCanvasRenderingContext2D(): CanvasRenderingContext2D {
+    return this.gl2d;
+  }
+
+  getCamera(): Camera {
+    return this.camera;
+  }
+
+  setDebugDraw(draw: Draw): void {
+    this.world.setDebugDraw(draw);
   }
 
   keyDown(event: KeyboardEvent): void {
