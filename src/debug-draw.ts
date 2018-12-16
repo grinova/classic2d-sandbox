@@ -402,41 +402,28 @@ export class DebugDraw implements Draw {
     this.text = new RenderText(gl2d, textSize);
   }
 
-  drawPolygon(matrix: Mat4, vertices: Vec2[], color: Color): void {
-    const ps: Vec2[] = [];
-    for (let i = 0; i < vertices.length; i++) {
-      const p1 = vertices[i];
-      const p2 = vertices[(i + 1) % vertices.length];
-      ps.push(p1, p2);
-    }
-    this.lines.addVertices(matrix, ps, color);
-  }
-
-  drawCircle(matrix: Mat4, radius: number, color: Color): void {
+  drawCircle(position: Vec2, angle: number, radius: number, color: Color): void {
+    const matrix = new Mat4().translate(position.x, position.y).rotate(angle).scale(radius, radius, 1)
     const ps: Vec2[] = [];
     const f = Math.PI / 2;
-    const x = radius * Math.cos(f);
-    const y = radius * Math.sin(f);
+    const x = Math.cos(f);
+    const y = Math.sin(f);
     let p1 = new Vec2(x, y);
     for (let i = 1; i <= DebugDraw.CIRCLE_SEGMENT; i++) {
       const fi = 2 * Math.PI / DebugDraw.CIRCLE_SEGMENT * i + f;
-      const x = radius * Math.cos(fi);
-      const y = radius * Math.sin(fi);
+      const x = Math.cos(fi);
+      const y = Math.sin(fi);
       const p2 = new Vec2(x, y);
       ps.push(p1);
       ps.push(p2);
       p1 = p2.copy();
     }
-    this.drawSegment(matrix, new Vec2(), ps[0], color);
+    this.lines.addVertices(matrix, [new Vec2(), ps[0]], color);
     this.lines.addVertices(matrix, ps, color);
   }
 
-  drawSegment(matrix: Mat4, p1: Vec2, p2: Vec2, color: Color): void {
-    this.lines.addVertices(matrix, [p1, p2], color);
-  }
-
-  drawPoint(vertex: Vec2, color: Color): void {
-    this.points.vertex(vertex, color);
+  drawPoint(position: Vec2, color: Color): void {
+    this.points.vertex(position, color);
   }
 
   drawText(text: string, x: number, y: number): void {

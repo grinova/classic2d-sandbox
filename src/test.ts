@@ -47,8 +47,8 @@ export class Test<T = any> implements ContactListener<T> {
   draw(time: number): void {
     this.world.drawDebugData();
     this.drawHelp(time);
-    this.debugDraw && this.debugDraw.flush();
     this.drawContacts();
+    this.debugDraw && this.debugDraw.flush();
     this.clearContacts();
   }
 
